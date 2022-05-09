@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { resetPasswordMail } from 'src/helpers/mailTemplate';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 // import { mailer } from 'src/helpers/mailer';
 
 @Injectable()
@@ -112,12 +113,46 @@ export class AuthService {
     });
 
     console.log('Message sent: ', info.messageId);
-
-    // await mailer(user.email, template);
+    console.log('Message token: ', token);
 
     return {
       success: true,
       message: 'Reset password send successfullyy',
+    };
+  }
+
+  async resetPasword(data: ResetPasswordDto): Promise<any> {
+    const { userId, newPassword, token } = data;
+    console.log("userid: ", data)
+    const user = await this.userService.getUserById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    let passwordResetToken = await this.userService.findTokenByUserId(userId);
+    if (!passwordResetToken) {
+      throw new ForbiddenException('Invalid or expired password reset token');
+    }
+    const isValid = await bcrypt.compare(token, passwordResetToken.token);
+    console.log(isValid);
+    if (!isValid) {
+      throw new ForbiddenException('Invalid or expired password reset token');
+    }
+
+    const hashPassword = await bcrypt.hash(
+      newPassword,
+      Number(process.env.SALT_ROUND),
+    );
+    const result = await this.userService.changePassword(
+      user.username,
+      hashPassword,
+    );
+
+    return {
+      success: true,
+      message: 'Reset password successfullyy',
+      dataObj: result,
     };
   }
 }

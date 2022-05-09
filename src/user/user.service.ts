@@ -131,4 +131,9 @@ export class UserService {
     newToken.save();
     return resetToken;
   }
+
+  async findTokenByUserId(id: string) {
+    const result = await this.tokenModel.findOne({ userId: id });
+    return result;
+  }
 }
