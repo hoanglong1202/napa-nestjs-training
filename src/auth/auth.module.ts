@@ -1,3 +1,4 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -15,6 +16,15 @@ import { LocalStrategy } from './strategies/local.strategy';
     JwtModule.register({
       secret: process.env.SECRET_JWT_KEY,
       signOptions: { expiresIn: '60s' },
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        auth: {
+          user: `${process.env.TRANSPORTER_MAIL}`,
+          pass: `${process.env.TRANSPORTER_PASS}`,
+        },
+      },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

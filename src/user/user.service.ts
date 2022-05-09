@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Token, TokenDocument } from '../token/schemas/token.schema';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
-
+import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Token.name) private tokenModel: Model<TokenDocument>,
+  ) {}
 
   async getAllUser(): Promise<any | undefined> {
     const result = await this.userModel.find({}).select('-password -isDeleted');
@@ -103,5 +108,27 @@ export class UserService {
     );
 
     return result;
+  }
+
+  async addResetToken(id: string) {
+    const token = await this.tokenModel.findOne({ userId: id });
+
+    if (token) {
+      await this.tokenModel.deleteOne({ userId: id });
+    }
+
+    let resetToken = crypto.randomBytes(32).toString('hex');
+    const hashToken = await bcrypt.hash(
+      resetToken,
+      Number(process.env.SALT_ROUND),
+    );
+
+    const newToken = new this.tokenModel({
+      userId: id,
+      token: hashToken,
+    });
+
+    newToken.save();
+    return resetToken;
   }
 }

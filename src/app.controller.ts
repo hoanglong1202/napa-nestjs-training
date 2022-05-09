@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
@@ -30,6 +30,14 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Post('auth/change-password')
   async changePassword(@Request() req) {
-    return this.authService.changePassword(req.body.username, req.body.password);
+    return this.authService.changePassword(
+      req.body.username,
+      req.body.password,
+    );
+  }
+
+  @Get('auth/reset-password/:id')
+  async sendResetPaswordToken(@Param() params) {
+    return this.authService.sendResetPaswordToken(params.id);
   }
 }

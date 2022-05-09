@@ -7,12 +7,16 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { resetPasswordMail } from 'src/helpers/mailTemplate';
+import { MailerService } from '@nestjs-modules/mailer';
+// import { mailer } from 'src/helpers/mailer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private mailer: MailerService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -39,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async register(data: CreateUserDto) {
+  async register(data: CreateUserDto): Promise<any> {
     const { username, email, password } = data;
 
     const user = await this.userService.getUserByUsername(username);
@@ -66,7 +70,7 @@ export class AuthService {
     };
   }
 
-  async changePassword(username: string, password: string) {
+  async changePassword(username: string, password: string): Promise<any> {
     const user = await this.userService.getUserByUsername(username);
 
     if (!user) {
@@ -87,6 +91,33 @@ export class AuthService {
       success: true,
       message: 'Change password successfullyy',
       dataObj: result,
+    };
+  }
+
+  async sendResetPaswordToken(id: string): Promise<any> {
+    const user = await this.userService.getUserById(id);
+
+    if (!user || !user.email) {
+      throw new UnauthorizedException();
+    }
+
+    const token = await this.userService.addResetToken(user._id);
+    const template = resetPasswordMail(token, user._id);
+
+    let info = await this.mailer.sendMail({
+      from: `NAPA GLOBAL <${process.env.TRANSPORTER_MAIL}>`, // sender address
+      to: user.email || `vdhlong1202@gmail.com`, // list of receivers
+      subject: template.subject, // Subject line
+      html: template.template, // html body
+    });
+
+    console.log('Message sent: ', info.messageId);
+
+    // await mailer(user.email, template);
+
+    return {
+      success: true,
+      message: 'Reset password send successfullyy',
     };
   }
 }

@@ -1,4 +1,4 @@
-const resetPasswordMail = (token, id) => {
+export const resetPasswordMail = (token, id) => {
   const template = `
   <div style="padding: 0; color: #000000; font-family: 'Proxima Nova', sans-serif; font-weight: 400;">
     <div style="border: 1px solid #6415FF; box-sizing: border-box; border-radius: 30px; width: 850px; height: 330px; margin: 0 auto;">
@@ -18,8 +18,4 @@ const resetPasswordMail = (token, id) => {
   </div>`;
   const subject = `Reset password ✔`;
   return { template, subject };
-};
-
-module.exports = {
-  resetPasswordMail,
 };
