@@ -6,6 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
@@ -51,5 +52,25 @@ export class AppController {
   @Post('auth/reset-password')
   async resetPassword(@Request() req) {
     return this.authService.resetPasword(req.body);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Request() req) {}
+
+  @Get('callback')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Request() req) {
+    return this.authService.googleLogin(req);
+  }
+
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  async githubAuth(@Request() req) {}
+
+  @Get('callback')
+  @UseGuards(AuthGuard('github'))
+  githubAuthRedirect(@Request() req) {
+    return this.authService.githubLogin(req);
   }
 }

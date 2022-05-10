@@ -135,7 +135,6 @@ export class AuthService {
       throw new ForbiddenException('Invalid or expired password reset token');
     }
     const isValid = await bcrypt.compare(token, passwordResetToken.token);
-    console.log(isValid);
     if (!isValid) {
       throw new ForbiddenException('Invalid or expired password reset token');
     }
@@ -154,5 +153,27 @@ export class AuthService {
       message: 'Reset password successfullyy',
       dataObj: result,
     };
+  }
+
+  googleLogin(req) {
+    if (!req.user) {
+      return 'No user from google'
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user
+    }
+  }
+
+  githubLogin(req) {
+    if (!req.user) {
+      return 'No user from Github'
+    }
+
+    return {
+      message: 'User information from Github',
+      user: req.user
+    }
   }
 }

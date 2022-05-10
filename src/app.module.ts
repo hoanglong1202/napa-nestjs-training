@@ -6,6 +6,8 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { GoogleStrategy } from './auth/strategies/google.strategy';
+import { GithubStrategy } from './auth/strategies/github.strategy';
 
 @Module({
   imports: [
@@ -18,6 +20,6 @@ import { ConfigModule } from '@nestjs/config';
     TokenModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GoogleStrategy, GithubStrategy],
 })
 export class AppModule {}
