@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
 import { GithubStrategy } from './auth/strategies/github.strategy';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GithubStrategy } from './auth/strategies/github.strategy';
     AuthModule,
     UserModule,
     TokenModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy, GithubStrategy],

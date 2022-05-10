@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Role } from 'src/auth/enum/role.enum';
 
 export type UserDocument = User & Document;
 
@@ -17,8 +18,8 @@ export class User {
   @Prop({ default: true })
   isActive: boolean;
 
-  @Prop({ enums: ['user', 'admin'], default: 'user' })
-  roles: string;
+  @Prop({ default: [Role.User] })
+  roles: Role[];
 
   @Prop({ default: false })
   isDeleted: boolean;

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Token, TokenSchema } from 'src/token/schemas/token.schema';
 import { User, UserSchema } from './schemas/user.schema';
-// import { Cat, CatSchema } from './schemas/cat.schema';
 import { UserService } from './user.service';
 
 @Module({

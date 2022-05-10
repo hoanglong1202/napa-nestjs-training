@@ -15,7 +15,9 @@ export class UserService {
   ) {}
 
   async getAllUser(): Promise<any | undefined> {
-    const result = await this.userModel.find({}).select('-password -isDeleted');
+    const result = await this.userModel
+      .find({ isDeleted: false })
+      .select('-password -isDeleted');
     return result;
   }
 
