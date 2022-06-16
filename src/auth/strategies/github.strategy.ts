@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { config } from 'dotenv';
 import { Strategy, VerifyCallback } from 'passport-github';
 
-
 config();
 
 @Injectable()
@@ -19,7 +18,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
 
   async validate(
     accessToken: string,
-    refreshToken: string,
     profile: any,
     done: VerifyCallback,
   ): Promise<any> {

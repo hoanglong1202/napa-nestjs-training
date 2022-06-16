@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 export const mailer = async (receivers, mail) => {
   try {
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: `${process.env.TRANSPORTER_MAIL}`,
@@ -11,7 +11,7 @@ export const mailer = async (receivers, mail) => {
     });
 
     // send mail with defined transport object
-    let info = await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `NAPA GLOBAL <${process.env.TRANSPORTER_MAIL}>`, // sender address
       to: receivers || `vdhlong1202@gmail.com`, // list of receivers
       subject: mail.subject, // Subject line

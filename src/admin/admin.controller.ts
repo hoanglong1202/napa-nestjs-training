@@ -5,7 +5,7 @@ import {
   Param,
   Put,
   Request,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { Role } from 'src/auth/enum/role.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';

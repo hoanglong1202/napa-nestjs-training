@@ -105,7 +105,7 @@ export class AuthService {
     const token = await this.userService.addResetToken(user._id);
     const template = resetPasswordMail(token, user._id);
 
-    let info = await this.mailer.sendMail({
+    const info = await this.mailer.sendMail({
       from: `NAPA GLOBAL <${process.env.TRANSPORTER_MAIL}>`, // sender address
       to: user.email || `vdhlong1202@gmail.com`, // list of receivers
       subject: template.subject, // Subject line
@@ -123,14 +123,13 @@ export class AuthService {
 
   async resetPasword(data: ResetPasswordDto): Promise<any> {
     const { userId, newPassword, token } = data;
-    console.log("userid: ", data)
     const user = await this.userService.getUserById(userId);
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    let passwordResetToken = await this.userService.findTokenByUserId(userId);
+    const passwordResetToken = await this.userService.findTokenByUserId(userId);
     if (!passwordResetToken) {
       throw new ForbiddenException('Invalid or expired password reset token');
     }
@@ -157,23 +156,23 @@ export class AuthService {
 
   googleLogin(req) {
     if (!req.user) {
-      return 'No user from google'
+      return 'No user from google';
     }
 
     return {
       message: 'User information from google',
-      user: req.user
-    }
+      user: req.user,
+    };
   }
 
   githubLogin(req) {
     if (!req.user) {
-      return 'No user from Github'
+      return 'No user from Github';
     }
 
     return {
       message: 'User information from Github',
-      user: req.user
-    }
+      user: req.user,
+    };
   }
 }

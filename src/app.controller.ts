@@ -56,7 +56,8 @@ export class AppController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Request() req) {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async googleAuth() {}
 
   @Get('callback')
   @UseGuards(AuthGuard('google'))
@@ -66,7 +67,8 @@ export class AppController {
 
   @Get('github')
   @UseGuards(AuthGuard('github'))
-  async githubAuth(@Request() req) {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async githubAuth() {}
 
   @Get('callback')
   @UseGuards(AuthGuard('github'))
